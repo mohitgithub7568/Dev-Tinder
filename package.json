@@ -1,0 +1,16 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Mohit Soni",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/homework.js",
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
