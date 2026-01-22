@@ -1,34 +1,83 @@
-const express= require('express');
-
+const express = require('express');
+const { connectDb } = require('./config/database');
 const app= express();
+const User = require('./models/user');
 
-const {isAuth,UserAuth}= require('./middleware/auth');
+app.use(express.json());
 
-app.use("/admin",isAuth)
+// post data of user on signup
+app.post('/signup',async (req, res) => {
+    const User1Data = new User(req.body);
+   try {
+        const savedUser = await User1Data.save();
+        res.status(201).send(savedUser);
+   } catch (err) {
+        res.status(500).send(err);
+   }
+});
 
-app.get("/user/login",(req,res,next)=>{
-    console.log("user login route called");
-    res.send("user logged in");
-})
+//feed api
+app.get('/feed', async (req, res) => {
+    try{
+        const users = await User.find({});
+        res.status(200).send(users);
+    }
+    catch(err){
+        res.status(500).send(err);
+    }
+});
 
-app.get("/admin/getalldata",(req,res,next)=>{
-    console.log("getalldata route called");
-    res.send("all data reached");
-})
-app.get("/admin/deleteuser",(req,res,next)=>{
-    console.log("delete a user route called");
-    res.send("delete user");
-})
-app.get("/admin/deleteall",(req,res,next)=>{
-    console.log("delete all user route called");
-    res.send("all data deleted");
-})
+// get user by id
+app.get('/user/:id', async (req, res) => {
+    try{
+        const user = await User.findById(req.params.id);
+        if(!user){
+            return res.status(404).send("User not found");
+        }
+        
+        res.status(200).send(user);
+    }
+    catch(err){
+        res.status(500).send(err);
+    }
+});
 
-app.use("/user",UserAuth,(req,res)=>{
-    console.log("at user route request");
-    res.send("response to a user");
-})
+//delete user by id in body
+app.delete('/user', async (req, res) => {
+    try{
+        const deletedUser = await User.findByIdAndDelete(req.body.id);
+        if(!deletedUser){
+            return res.status(404).send("User not found");
+        }
+        res.status(200).send(deletedUser);
+    }
+    catch(err){
+        res.status(500).send(err);
+    }
+});
 
-app.listen(3000,()=>{
-    console.log("connected successfully");
+//update data from id
+app.patch('/user',async (req,res)=>{ 
+    const userdata = req.body;
+    try{
+        const updatedUser = await User.findByIdAndUpdate(userdata.id, userdata,{
+            returnDocument:'after',
+            runValidators:true
+        });
+        res.status(200).send(updatedUser);
+    }
+    catch{
+        res.status(500).send(err);
+    }
 })
+connectDb()
+.then(()=>{
+    console.log("Database connected successfully");
+    app.listen(3000, ()=>{  
+        console.log("Server is running on port 3000");
+    });
+})
+.catch((err)=>{
+    console.log("Database connection failed", err);
+});
+
