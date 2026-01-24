@@ -9,10 +9,36 @@ app.use(express.json());
 app.post('/signup',async (req, res) => {
     const User1Data = new User(req.body);
    try {
+        //validator for required fields
+        const {firstName, email, password, age} = req.body;
+        if(!firstName || !email || !password || !age){
+            return  res.status(400).send("firstName, email, password and age are required fields");
+        }
+        //
+
+        //validator for only 10 skills
+        if(User1Data.skills && User1Data.skills.length >10){
+            throw new Error("Skills cannot be more than 10");
+        }
+        //
+
+        //validator for password length
+        if(password.length <6){
+            return res.status(400).send("Password must be at least 6 characters long");
+        }
+        //
+
+        //validator for unique email
+        const existingUser =  await User.findOne({email: email});
+        if(existingUser){
+            return res.status(400).send("Email already in use");
+        }
+        //
+        
         const savedUser = await User1Data.save();
         res.status(201).send(savedUser);
    } catch (err) {
-        res.status(500).send(err);
+        res.status(500).send("Error saving user: " + err.message);
    }
 });
 
@@ -57,16 +83,32 @@ app.delete('/user', async (req, res) => {
 });
 
 //update data from id
-app.patch('/user',async (req,res)=>{ 
+app.patch('/user/:userId',async (req,res)=>{ 
     const userdata = req.body;
+    const userId = req.params.userId;
     try{
-        const updatedUser = await User.findByIdAndUpdate(userdata.id, userdata,{
+        // allowing valid updates only
+        const allowedUpdates = ['lastName','age','gender','photoUrl','skills','about'];
+        const requestedUpdates = Object.keys(userdata).every((update)=>allowedUpdates.includes(update));
+
+        if(!requestedUpdates){
+            throw new Error("Invalid updates requested");
+        }
+        if(userdata.skills && userdata.skills.length >10){
+            throw new Error("Skills cannot be more than 10");
+        }
+        //
+
+        const updatedUser = await User.findByIdAndUpdate(userId, userdata, {
             returnDocument:'after',
             runValidators:true
         });
+        if(!updatedUser){
+            return res.status(404).send("User not found");
+        }
         res.status(200).send(updatedUser);
     }
-    catch{
+    catch(err){
         res.status(500).send(err);
     }
 })
