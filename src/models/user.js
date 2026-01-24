@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
+
 
 const userSchema = mongoose.Schema({
     firstName:{
@@ -17,6 +19,11 @@ const userSchema = mongoose.Schema({
         unique:true,
         trim:true,
         lowercase:true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Invalid email format:"+ value);
+            }
+        }
 
     },
     password:{
@@ -36,7 +43,7 @@ const userSchema = mongoose.Schema({
 
 // validaors basically are functions that run when we try to save or update a field
 
-        //by deafult validate function only runs when new value is set
+        //by default validate function only runs when new value is set
 
         //but we can force it to run on update also by setting runValidators:true in options of findByIdAndUpdate
         validate(value){
@@ -48,6 +55,11 @@ const userSchema = mongoose.Schema({
     photoUrl:{
         type:String,
         default:"https://www.pngall.com/wp-content/uploads/5/Profile-PNG-High-Quality-Image.png",
+        validate(value){
+            if(value && !validator.isURL(value)){
+                throw new Error("Invalid URL format for photoUrl:"+ value);
+            }
+        }
     },
     skills:{
         type:[String],
