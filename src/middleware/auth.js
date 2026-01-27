@@ -9,6 +9,7 @@ const UserAuth=async (req,res,next)=>{
     if(!token){
         throw new Error("Unauthorized: No token provided");
     }
+    //token has a data and secret key encoded
     const decodedMessage= jwt.verify(token,"secretkey");
     const userId=decodedMessage.userId;
 
