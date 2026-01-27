@@ -4,6 +4,7 @@ const User= require('../models/user');
 const validateUserData= require('../helpers/validator');
 const bcrypt= require('bcrypt');
 const jwt= require('jsonwebtoken');
+const e = require('express');
 
 // post data of user on signup
 authRoutes.post('/signup',async (req, res) => {
@@ -55,6 +56,14 @@ authRoutes.post('/login', async (req, res) => {
     catch(err){
         res.status(500).send(err.message);
     } 
+}); 
+//logout api
+authRoutes.post('/logout', async (req, res) => {
+    res.cookie("token", null, {
+  expires: new Date(Date.now())
 });
+
+    res.status(200).send("Logout successful");
+}); 
 
 module.exports= authRoutes;

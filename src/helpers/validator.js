@@ -15,6 +15,21 @@ const validateUserData = (req) => {
     }
 }
 
+const valdateProfileEditData = (req) => {
+    const AllowedFields = ['firstName', 'lastName', 'email', 'age', 'gender','photoUrl','skills','about'];
+    const fieldsToUpdate = Object.keys(req.body);
+    const isValidOperation = fieldsToUpdate.every(
+        (field) => AllowedFields.includes(field)
+    );
+    if(!isValidOperation) {
+        throw new Error("Invalid updates!");
+    }
+};
 
-module.exports = validateUserData;
-            
+const validateProfileNewPassword = (newPassword) => {
+    if(!newPassword || !validator.isStrongPassword(newPassword, {minLength:6})) {
+        throw new Error("New password is required and should be strong");
+    }
+}
+
+module.exports = {  validateUserData, valdateProfileEditData, validateProfileNewPassword};
