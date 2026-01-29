@@ -31,5 +31,4 @@ const validateProfileNewPassword = (newPassword) => {
         throw new Error("New password is required and should be strong");
     }
 }
-
 module.exports = {  validateUserData, valdateProfileEditData, validateProfileNewPassword};
