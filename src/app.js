@@ -9,13 +9,13 @@ app.use(cookieParser());
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/Profile');
 const requestRoutes = require('./routes/request');
-
+const userRoutes = require('./routes/user');
 //routes
 
 app.use('/', authRoutes);
 app.use('/', profileRoutes);
 app.use('/', requestRoutes);
-
+app.use('/', userRoutes);
 //connecting to database and starting server
 connectDb()
 .then(()=>{

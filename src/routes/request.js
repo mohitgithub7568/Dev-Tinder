@@ -52,6 +52,7 @@ requestRoutes.post('/request/send/:status/:toUserId', UserAuth, async (req, res)
         res.status(500).send(err.message);
     }
 });
+//review connection request api
 requestRoutes.post('/request/review/:status/:requestId', UserAuth, async (req, res) => {
     try{
         const loggedUserId= req.user._id;
