@@ -6,9 +6,9 @@ const Body = () => {
   return (
     <div>
         <Navbar />
+        
         {/* Nested routes will render here */}
         <Outlet/>
-        
         <Footer />
     </div>
   )
