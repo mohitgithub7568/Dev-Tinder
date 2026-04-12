@@ -23,7 +23,12 @@ profileRoutes.patch("/profile/edit",UserAuth, async (req, res) => {
             loggedUser[field]= req.body[field];
         });
         await loggedUser.save();
-        res.json({message:loggedUser.firstName + " your profile updated successfully"});
+        const safeUser = loggedUser.toObject();
+        delete safeUser.password;
+        res.json({
+            message: loggedUser.firstName + " your profile updated successfully",
+            data: safeUser
+        });
 
     }
     catch(err){

@@ -16,7 +16,6 @@ const Feed = () => {
         try {
             const response = await axios.get(`${BASE_URL}/user/feed`, { withCredentials: true });
             dispatch(setFeed(response.data.data || []));
-            console.log("Feed data:", response.data.data || []);
         }
         catch (error) {
             console.error("Error fetching feed:", error);
