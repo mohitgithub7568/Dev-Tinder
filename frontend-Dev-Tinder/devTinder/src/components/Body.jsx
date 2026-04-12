@@ -18,10 +18,10 @@ const Body = () => {
   const fetchUserData=async()=>{
     if(user) return;
       try {
-        const res = await axios.get(BASE_URL+"/profile/view ",{withCredentials:true});
+        const res = await axios.get(BASE_URL+"/profile/view",{withCredentials:true});
         dispatch(addUser(res.data));
       } catch (err) {
-        if(err.status === 401)
+        if(err.response?.status === 401)
         navigate("/login");
         console.log(err.response?.data || err.message);
       }

@@ -3,7 +3,6 @@ const userRoutes= express.Router();
 const {UserAuth}= require('../middleware/auth');
 const ConnectionRequestModel= require('../models/connectionRequests');
 const User= require('../models/user');
-const { connection, set } = require('mongoose');
 
 //get all pending connection requests received by the logged-in user
 userRoutes.get('/user/requests/received',UserAuth, async (req, res) => {
@@ -57,7 +56,7 @@ userRoutes.get('/user/feed', UserAuth, async (req, res) => {
         const loggedUser= req.user;
         //pagination
         const page= parseInt(req.query.page) || 1;
-        const limit= parseInt(req.query.limit) || 10;
+        let limit= parseInt(req.query.limit) || 10;
         limit= Math.min(limit, 50); 
         const skip= (page - 1) * limit;
 
@@ -69,8 +68,12 @@ userRoutes.get('/user/feed', UserAuth, async (req, res) => {
 
         const hiddenFromUser= new Set(); 
         connectedUsers.forEach((connection) => {
-            hiddenFromUser.add(connection.fromUserId.toString());
-            hiddenFromUser.add(connection.toUserId.toString())
+            if(connection.fromUserId){
+                hiddenFromUser.add(connection.fromUserId.toString());
+            }
+            if(connection.toUserId){
+                hiddenFromUser.add(connection.toUserId.toString());
+            }
         })
         hiddenFromUser.add(loggedUser._id.toString());   
 
