@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { BASE_URL } from '../utils/constants'
 
+
 const Navbar = () => {
   const user = useSelector((store) => store.user.user);
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ const Navbar = () => {
             <span className="badge">New</span>
           </Link>
         </li>
-        <li><a>Settings</a></li>
+        <li><Link to="/connections">Connections</Link></li>
         <li>
           <a onClick={handleLogout}>Logout</a>
           </li>
