@@ -1,5 +1,5 @@
 import React from 'react'
-import { setRequests } from '../utils/requestSlice';
+import { removeRequests, setRequests } from '../utils/requestSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { BASE_URL } from '../utils/constants.js';
@@ -9,6 +9,17 @@ const Requests = () => {
     const dispatch = useDispatch();
     const requests = useSelector((store) => store.requests.requests);
 
+    const reviewRequest = (status,_id) => {
+        try{
+            axios.post(`${BASE_URL}/request/review/${status}/${_id}`,{}, { withCredentials: true });
+            dispatch(removeRequests(_id));
+        }
+        catch(err){
+            console.log(err);
+        }
+
+    }
+    
     const fetchRequests = async () => {
         try{
             const response = await axios.get(`${BASE_URL}/user/requests/received`, { withCredentials: true });
@@ -98,12 +109,14 @@ const Requests = () => {
                                     <button
                                         type='button'
                                         className='flex h-11 w-16 items-center justify-center rounded-2xl border border-emerald-400/30 bg-emerald-500/15 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-200 shadow-lg shadow-emerald-500/10 transition-transform duration-200 hover:scale-105 hover:bg-emerald-400/20 sm:w-11 sm:rounded-full'
+                                        onClick={() => reviewRequest("accepted", request._id)}
                                     >
                                         Accept
                                     </button>
                                     <button
                                         type='button'
                                         className='flex h-11 w-16 items-center justify-center rounded-2xl border border-rose-400/30 bg-rose-500/15 px-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-rose-200 shadow-lg shadow-rose-500/10 transition-transform duration-200 hover:scale-105 hover:bg-rose-400/20 sm:w-11 sm:rounded-full'
+                                        onClick={() => reviewRequest("rejected", request._id)}
                                     >
                                         Reject
                                     </button>
