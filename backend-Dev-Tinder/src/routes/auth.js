@@ -26,7 +26,11 @@ authRoutes.post('/signup',async (req, res) => {
         });
 
         const savedUser = await User1Data.save();
+        //generate jwt token
+        const token = savedUser.getJWT();
+        res.cookie("token",token);
         res.status(201).send(savedUser);
+
    } catch (err) {
         res.status(500).send("Error saving user: " + err.message);
    }

@@ -1,10 +1,27 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import axios from 'axios'
+import { BASE_URL } from '../utils/constants.js'
+import { removeUserFromFeed } from '../utils/feedSlice.js'
 
 const UserCard = ({user}) => {
-    const {firstName, lastName, photoUrl,age ,gender,about, skills} = user || {};
+    const {_id,firstName, lastName, photoUrl,age ,gender,about, skills} = user || {};
     const visibleSkills = Array.isArray(skills) ? skills.filter(Boolean).slice(0, 4) : [];
     
     if (!user) return <div>No user data</div>;
+
+    const dispatch = useDispatch();
+
+    const handleSendRequest = async(status,user_id) => {
+        try{
+            await axios.post(`${BASE_URL}/request/send/${status}/${user_id}`, {}, { withCredentials: true });
+            //no alert or state update needed as the user will be removed from feed on next fetch
+            dispatch(removeUserFromFeed(user_id));
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
     
   return (
 
@@ -49,8 +66,13 @@ const UserCard = ({user}) => {
 
                 <div className="card-actions mt-2 justify-center gap-3 pt-1 pb-1">
 
-                    <button className="btn rounded-full border-0 bg-emerald-500 px-6 text-white shadow-lg shadow-emerald-500/30 transition-transform duration-200 hover:scale-105 hover:bg-emerald-400">interested</button>
-                    <button className="btn rounded-full border border-white/20 bg-white/5 px-6 text-slate-200 transition-transform duration-200 hover:scale-105 hover:bg-white/10">ignore</button>
+                    <button className="btn rounded-full border-0 bg-emerald-500 px-6 text-white shadow-lg shadow-emerald-500/30 transition-transform duration-200 hover:scale-105 hover:bg-emerald-400"
+                     onClick={() => handleSendRequest("interested", _id)}
+                     >interested</button>
+
+                    <button className="btn rounded-full border border-white/20 bg-white/5 px-6 text-slate-200 transition-transform duration-200 hover:scale-105 hover:bg-white/10"
+                    onClick={() => handleSendRequest("ignored", _id)}
+                    >ignore</button>
                 </div>
             </div>
         </div>

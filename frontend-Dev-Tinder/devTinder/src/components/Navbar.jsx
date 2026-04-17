@@ -3,9 +3,11 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { removeUser } from '../utils/userSlice'
+import { clearFeed } from '../utils/feedSlice'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { BASE_URL } from '../utils/constants'
+import {removeRequests} from '../utils/requestSlice'
 
 
 const Navbar = () => {
@@ -16,6 +18,9 @@ const Navbar = () => {
   const handleLogout=async()=>{
     try {
     await axios.post(BASE_URL+"/logout",{},{withCredentials:true});
+    //clear feed and requests from store on logout
+    dispatch(clearFeed());
+    dispatch(removeRequests());
     dispatch(removeUser());
     return navigate("/login");
   } catch (error) {

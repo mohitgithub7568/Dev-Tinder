@@ -24,6 +24,13 @@ const Feed = () => {
     useEffect(() => {
         getFeed();
     }, [])
+    if(!feed || feed.length === 0){
+        return (
+            <div className='p-10 flex items-center justify-center'>
+                <p className='text-gray-500 text-lg'>No users in feed. Please check back later!</p>
+            </div>
+        )
+    }
 
     return (feed && feed.length > 0 &&  (
         <div className='p-10 flex items-center justify-center'>
