@@ -12,7 +12,7 @@ app.use(cors({
 }));
 
 const authRoutes = require('./routes/auth');
-const profileRoutes = require('./routes/Profile');
+const profileRoutes = require('./routes/profile');
 const requestRoutes = require('./routes/request');
 const userRoutes = require('./routes/user');
 //routes
