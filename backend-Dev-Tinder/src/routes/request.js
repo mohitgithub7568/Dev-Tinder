@@ -3,6 +3,7 @@ const requestRoutes = express.Router();
 const {UserAuth} = require('../middleware/auth');
 const ConnectionRequestModel = require('../models/connectionRequests');
 const User = require('../models/user');
+const sendEmail = require('../helpers/sendEmail');
 //send connection request api
 requestRoutes.post('/request/send/:status/:toUserId', UserAuth, async (req, res) => {
     try{
@@ -46,6 +47,10 @@ requestRoutes.post('/request/send/:status/:toUserId', UserAuth, async (req, res)
         });
 
         const data=await connectionRequest.save();
+        //send email notification to the recipient user about the new connection request
+        const emailResponse = await sendEmail.run(toUser.email, ` a new connection request from ${req.user.firstName} to ${toUser.firstName}`);
+        console.log("Email response:", emailResponse);
+
         res.json({message: "Connection request sent successfully", data});
     }
     catch(err){
