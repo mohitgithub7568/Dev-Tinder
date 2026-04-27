@@ -17,6 +17,7 @@ const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
 const requestRoutes = require('./routes/request');
 const userRoutes = require('./routes/user');
+const paymentRouter = require('./routes/payment');
 require('./helpers/CronJobs');
 //routes
 
@@ -24,6 +25,8 @@ app.use('/', authRoutes);
 app.use('/', profileRoutes);
 app.use('/', requestRoutes);
 app.use('/', userRoutes);
+app.use('/', paymentRouter);
+
 //connecting to database and starting server
 connectDb()
 .then(()=>{

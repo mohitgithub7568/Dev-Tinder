@@ -8,7 +8,7 @@ import Feed from './components/Feed.jsx'
 import Profile from './components/Profile.jsx'
 import Connections from './components/Connections.jsx'
 import Requests from './components/Requests.jsx'
-
+import Premium from './components/Premium.jsx'
 function App() {
   return (
     <>
@@ -20,6 +20,7 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/connections' element={<Connections />} />
             <Route path='/requests' element={<Requests />} />
+            <Route path='/premium' element={<Premium />} />
         </Route>
       </Routes> 
       </Provider>
