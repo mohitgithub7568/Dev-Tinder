@@ -50,6 +50,7 @@ const Connections = () => {
                     } = connection;
 
                     return (
+                        // Each connection card have a chat button on right most side of cardf that navigates to the chat page with the respective user
                         <div
                             key={_id}
                             className='flex min-h-[200px] w-full flex-col gap-3 rounded-2xl border border-white/10 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-4 text-slate-100 shadow-xl sm:flex-row sm:items-center sm:gap-5 sm:p-5'
@@ -92,6 +93,16 @@ const Connections = () => {
                                         ))}
                                     </div>
                                 )}
+                                
+                            
+                            </div>
+                            <div className='flex shrink-0 items-center justify-center'>
+                                <a
+                                    href={`/chat/${connection._id}`}
+                                    className='rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400'
+                                >
+                                    Chat
+                                </a>
                             </div>
                         </div>
                     );

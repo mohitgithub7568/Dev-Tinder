@@ -5,6 +5,9 @@ const cookieParser = require('cookie-parser');
 const cors= require("cors")
 require('dotenv').config();
 
+const initializeSocket = require('./helpers/socket');
+const http = require('http');
+
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
@@ -18,6 +21,7 @@ const profileRoutes = require('./routes/profile');
 const requestRoutes = require('./routes/request');
 const userRoutes = require('./routes/user');
 const paymentRouter = require('./routes/payment');
+const chatRouter = require('./routes/chat');
 require('./helpers/CronJobs');
 //routes
 
@@ -26,13 +30,18 @@ app.use('/', profileRoutes);
 app.use('/', requestRoutes);
 app.use('/', userRoutes);
 app.use('/', paymentRouter);
+app.use('/', chatRouter);
+
+//initialize socket.io , which will be used for real-time notifications in the application
+const server = http.createServer(app);
+initializeSocket(server);
 
 //connecting to database and starting server
 connectDb()
 .then(()=>{
     console.log("Database connected successfully");
-    app.listen(4000, ()=>{  
-        console.log("Server is running on port 4000");
+    server.listen(process.env.PORT, ()=>{  
+        console.log("Server is running on port", process.env.PORT);
     });
 })
 .catch((err)=>{
